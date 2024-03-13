@@ -27995,18 +27995,15 @@ async function run() {
 
 			try {
 				await core.group("Running migrations", async () => {
-					await exec.exec(`gigalixir ps:migrate -a ${gigalixirApp}`);
+					await exec.exec(`gigalixir run mix ecto.migrate -a ${gigalixirApp}`);
 				});
 			} catch (error) {
 				if (currentRelease === 0) {
 					core.warning("Migration failed");
 				} else {
 					core.warning(
-						`Migration failed, rolling back to the previous release: ${currentRelease}`,
+						`Migration failed, the previous release: ${currentRelease}`,
 					);
-					await core.group("Rolling back", async () => {
-						await exec.exec(`gigalixir releases:rollback -a ${gigalixirApp}`);
-					});
 				}
 
 				core.setFailed(error.message);
